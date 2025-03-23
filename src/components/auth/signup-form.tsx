@@ -21,15 +21,22 @@ import {
 
 // Define form validation schema
 const formSchema = z.object({
+  displayName: z.string().min(2, {
+    message: "Display name must be at least 2 characters.",
+  }),
   email: z.string().email({
     message: "Please enter a valid email address.",
   }),
-  password: z.string().min(6, {
-    message: "Password must be at least 6 characters.",
+  password: z.string().min(8, {
+    message: "Password must be at least 8 characters.",
   }),
+  confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
 });
 
-export function LoginForm() {
+export function SignupForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -37,8 +44,10 @@ export function LoginForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      displayName: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
@@ -47,13 +56,14 @@ export function LoginForm() {
     try {
       setIsLoading(true);
       
-      // Call the login API
-      const response = await fetch('/api/auth/login', {
+      // Example API call to register user
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          displayName: values.displayName,
           email: values.email,
           password: values.password,
         }),
@@ -61,20 +71,16 @@ export function LoginForm() {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || 'Login failed');
+        throw new Error(error.message || 'Registration failed');
       }
 
-      // Get user data from response
-      await response.json();
+      toast.success("Account created successfully! Please check your email to verify your account.");
       
-      // Show success message
-      toast.success("Logged in successfully!");
-      
-      // Navigate to dashboard or home page after successful login
-      router.push("/dashboard");
+      // Navigate to login page after successful registration
+      router.push("/login");
     } catch (error) {
-      console.error("Login failed:", error);
-      toast.error(error instanceof Error ? error.message : "Invalid email or password");
+      console.error("Registration failed:", error);
+      toast.error(error instanceof Error ? error.message : "Registration failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -83,11 +89,34 @@ export function LoginForm() {
   return (
     <div className="space-y-6">
       <div className="space-y-2 text-center">
-        <h1 className="text-3xl font-bold">Sign in to your account</h1>
+        <h1 className="text-3xl font-bold">Create an account</h1>
+        <p className="text-sm text-gray-400">
+          Enter your information to create an account
+        </p>
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="displayName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Display Name</FormLabel>
+                <FormControl>
+                  <Input 
+                    placeholder="John Doe" 
+                    {...field} 
+                    className="bg-transparent border-gray-700 focus-visible:ring-gray-400"
+                    disabled={isLoading}
+                    aria-required="true"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name="email"
@@ -96,8 +125,8 @@ export function LoginForm() {
                 <FormLabel>Email address</FormLabel>
                 <FormControl>
                   <Input 
-                    placeholder="name@example.com" 
                     type="email"
+                    placeholder="name@example.com" 
                     {...field} 
                     className="bg-transparent border-gray-700 focus-visible:ring-gray-400"
                     disabled={isLoading}
@@ -114,18 +143,32 @@ export function LoginForm() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <div className="flex items-center justify-between">
-                  <FormLabel>Password</FormLabel>
-                  <Link 
-                    href="/forgot-password" 
-                    className="text-sm text-indigo-400 hover:text-indigo-300"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
+                <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input 
                     type="password" 
+                    placeholder="••••••••"
+                    {...field} 
+                    className="bg-transparent border-gray-700 focus-visible:ring-gray-400"
+                    disabled={isLoading}
+                    aria-required="true"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm Password</FormLabel>
+                <FormControl>
+                  <Input 
+                    type="password" 
+                    placeholder="••••••••"
                     {...field} 
                     className="bg-transparent border-gray-700 focus-visible:ring-gray-400"
                     disabled={isLoading}
@@ -139,20 +182,20 @@ export function LoginForm() {
 
           <Button 
             type="submit" 
-            className="w-full bg-indigo-600 hover:bg-indigo-500 text-white"
+            className="w-full bg-indigo-600 hover:bg-indigo-500 text-white mt-6"
             disabled={isLoading}
-            aria-label="Sign in to your account"
+            aria-label="Create account"
           >
-            {isLoading ? "Signing in..." : "Sign in"}
+            {isLoading ? "Creating account..." : "Create account"}
           </Button>
         </form>
       </Form>
 
       <div className="text-center">
         <p className="text-sm text-gray-400">
-          Not a member?{" "}
-          <Link href="/signup" className="text-indigo-400 hover:text-indigo-300">
-            Sign-up
+          Already have an account?{" "}
+          <Link href="/login" className="text-indigo-400 hover:text-indigo-300">
+            Sign in
           </Link>
         </p>
       </div>

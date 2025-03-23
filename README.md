@@ -4,10 +4,14 @@
 - [Next.js](https://nextjs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [TailwindCSS](https://tailwindcss.com/)
-- Shadcn UI - [Tailwind UI](https://ui.shadcn.com/)
-- Zustand - [Zustand](https://github.com/pmndrs/zustand)
-- Zod - [Zod](https://github.com/colinhacks/zod)
-- Framer Motion - [Framer Motion](https://www.framer.com/motion/)
+- [Shadcn UI](https://ui.shadcn.com/)
+- [Zustand](https://github.com/pmndrs/zustand)
+- [Zod](https://github.com/colinhacks/zod)
+- [Framer Motion](https://www.framer.com/motion/)
+- [React Hook Form](https://react-hook-form.com/)
+- [React Router](https://reactrouter.com/)
+- [React Hot Toast](https://react-hot-toast.com/)
+
 
 ## Getting Started
 
