@@ -1,0 +1,41 @@
+{
+  "page": {
+    "title": "Verificação de Email",
+    "loading": {
+      "message": "Verificando seu endereço de email..."
+    },
+    "success": {
+      "title": "Email Verificado",
+      "message": "Seu email foi verificado com sucesso.",
+      "button": "Ir para Login"
+    },
+    "error": {
+      "title": "Falha na Verificação",
+      "message": "Não foi possível verificar seu endereço de email.",
+      "tokenMissing": "Token de verificação ausente",
+      "expired": "Link de verificação expirado",
+      "invalid": "Token de verificação inválido",
+      "alreadyVerified": "Email já foi verificado",
+      "generic": "Ocorreu um erro ao verificar seu email",
+      "button": "Ir para Página Inicial"
+    }
+  },
+  "api": {
+    "errors": {
+      "tokenRequired": "Token de verificação é obrigatório",
+      "invalidToken": "Token de verificação inválido",
+      "expiredToken": "Token de verificação expirado",
+      "alreadyVerified": "Email já foi verificado",
+      "serverError": "Falha ao verificar email",
+      "connectionError": "Falha ao conectar ao serviço de verificação",
+      "nonJsonResponse": "API externa retornou resposta não-JSON"
+    },
+    "success": {
+      "verified": "Email verificado com sucesso"
+    }
+  },
+  "toasts": {
+    "success": "Email verificado com sucesso!",
+    "error": "Falha ao verificar email. Por favor, tente novamente."
+  }
+}

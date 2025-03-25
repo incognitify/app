@@ -62,10 +62,14 @@ export function TranslationProvider({ children }: TranslationProviderProps) {
       try {
         // Load auth translations
         const authTranslations = await loadTranslations(language, "auth");
+        
+        // Load email verification translations
+        const verifyEmailTranslations = await loadTranslations(language, "verify-email");
 
         // Set all translations
         setTranslations({
           auth: authTranslations,
+          "verify-email": verifyEmailTranslations,
         });
       } catch (error) {
         console.error("Failed to load translations:", error);
