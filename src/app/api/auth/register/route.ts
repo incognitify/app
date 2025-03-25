@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     // Parse and validate request body
     const body = await request.json();
     const result = registerSchema.safeParse(body);
-    
+
     if (!result.success) {
       return NextResponse.json(
         { message: "Invalid input", errors: result.error.errors },
@@ -39,10 +39,7 @@ export async function POST(request: NextRequest) {
 
     // Simulate checking if email already exists
     if (email === "demo@example.com") {
-      return NextResponse.json(
-        { message: "Email already in use" },
-        { status: 409 }
-      );
+      return NextResponse.json({ message: "Email already in use" }, { status: 409 });
     }
 
     // Log password length for validation (in a real app, you would hash it)
@@ -62,9 +59,6 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error("Registration error:", error);
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }

@@ -1,4 +1,5 @@
 # Incognitify - core
+
 ## Tech stack
 
 - [Next.js](https://nextjs.org/)
@@ -11,7 +12,6 @@
 - [React Hook Form](https://react-hook-form.com/)
 - [React Router](https://reactrouter.com/)
 - [React Hot Toast](https://react-hot-toast.com/)
-
 
 ## Getting Started
 
@@ -52,26 +52,32 @@ When creating new branches, follow these naming conventions to maintain consiste
 ### Branch Types
 
 - `feature/` - For new features or enhancements
+
   - Example: `feature/user-authentication`
   - Example: `feature/dark-mode`
 
 - `bugfix/` - For bug fixes
+
   - Example: `bugfix/login-error`
   - Example: `bugfix/responsive-layout`
 
 - `hotfix/` - For urgent fixes that need immediate deployment
+
   - Example: `hotfix/security-vulnerability`
   - Example: `hotfix/critical-error`
 
 - `release/` - For release preparation
+
   - Example: `release/v1.0.0`
   - Example: `release/2023-q1`
 
 - `refactor/` - For code refactoring without changing functionality
+
   - Example: `refactor/cleanup-components`
   - Example: `refactor/optimize-queries`
 
 - `docs/` - For documentation changes
+
   - Example: `docs/api-documentation`
   - Example: `docs/update-readme`
 

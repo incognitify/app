@@ -1,24 +1,25 @@
 "use client";
 
-import Link from "next/link";
-import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useState } from "react";
+import Link from "next/link";
 import toast from "react-hot-toast";
+import { useTranslation } from "@/lib/i18n/translation-provider";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { 
+import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { LanguageSelector } from "@/components/language-selector";
 
-// Define form validation schema
 const formSchema = z.object({
   email: z.string().email({
     message: "Please enter a valid email address.",
@@ -28,8 +29,8 @@ const formSchema = z.object({
 export function ForgotPasswordForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { t } = useTranslation();
 
-  // Initialize form with validation schema
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,20 +38,16 @@ export function ForgotPasswordForm() {
     },
   });
 
-  // Form submission handler
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+
     try {
-      setIsLoading(true);
-      
-      // Example API call to request password reset
-      const response = await fetch('/api/auth/forgot-password', {
-        method: 'POST',
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email: values.email,
-        }),
+        body: JSON.stringify(values),
       });
 
       if (!response.ok) {
@@ -58,11 +55,11 @@ export function ForgotPasswordForm() {
         throw new Error(error.message || "Failed to request password reset");
       }
 
-      toast.success("Password reset link sent! Please check your email.");
+      toast.success(t("toasts.forgotPasswordSuccess"));
       setIsSubmitted(true);
     } catch (error) {
       console.error("Password reset request failed:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to request password reset. Please try again.");
+      toast.error(error instanceof Error ? error.message : t("toasts.forgotPasswordError"));
     } finally {
       setIsLoading(false);
     }
@@ -70,42 +67,40 @@ export function ForgotPasswordForm() {
 
   if (isSubmitted) {
     return (
-      <div className="space-y-6">
+      <div className="mx-auto max-w-sm space-y-6">
         <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold">Check your email</h1>
-          <p className="text-sm text-gray-400">
-            We've sent a password reset link to your email address.
-          </p>
+          <h1 className="text-3xl font-bold">{t("forgotPassword.checkEmail.title")}</h1>
+          <p className="text-sm text-gray-400">{t("forgotPassword.checkEmail.subtitle")}</p>
         </div>
         <div className="space-y-4">
           <p className="text-sm text-gray-400 text-center">
-            Didn't receive an email? Check your spam folder or{" "}
-            <button 
+            {t("forgotPassword.checkEmail.noEmail")}{" "}
+            <button
               onClick={() => setIsSubmitted(false)}
               className="text-indigo-400 hover:text-indigo-300"
             >
-              try again
+              {t("forgotPassword.checkEmail.tryAgain")}
             </button>
           </p>
           <div className="text-center">
-            <Link href="/login" className="text-indigo-400 hover:text-indigo-300 text-sm">
-              Return to sign in
+            <Link href="/login" className="text-sm text-indigo-400 hover:text-indigo-300">
+              {t("forgotPassword.checkEmail.returnToSignIn")}
             </Link>
           </div>
+        </div>
+        <div className="flex justify-center mt-6">
+          <LanguageSelector />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-sm space-y-6">
       <div className="space-y-2 text-center">
-        <h1 className="text-3xl font-bold">Forgot password?</h1>
-        <p className="text-sm text-gray-400">
-          Enter your email address and we'll send you a link to reset your password.
-        </p>
+        <h1 className="text-3xl font-bold">{t("forgotPassword.title")}</h1>
+        <p className="text-sm text-gray-400">{t("forgotPassword.subtitle")}</p>
       </div>
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
@@ -113,40 +108,29 @@ export function ForgotPasswordForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email address</FormLabel>
+                <FormLabel>{t("forgotPassword.emailLabel")}</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="email"
-                    placeholder="name@example.com" 
-                    {...field} 
-                    className="bg-transparent border-gray-700 focus-visible:ring-gray-400"
-                    disabled={isLoading}
-                    aria-required="true"
-                  />
+                  <Input placeholder={t("forgotPassword.emailPlaceholder")} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-
-          <Button 
-            type="submit" 
-            className="w-full bg-indigo-600 hover:bg-indigo-500 text-white mt-6"
-            disabled={isLoading}
-            aria-label="Send reset link"
-          >
-            {isLoading ? "Sending..." : "Send reset link"}
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading
+              ? t("forgotPassword.sendingButton")
+              : t("forgotPassword.sendResetLinkButton")}
           </Button>
         </form>
       </Form>
-
-      <div className="text-center">
-        <p className="text-sm text-gray-400">
-          Remember your password?{" "}
-          <Link href="/login" className="text-indigo-400 hover:text-indigo-300">
-            Back to sign in
-          </Link>
-        </p>
+      <div className="text-center text-sm">
+        <span className="text-gray-400">{t("forgotPassword.rememberPassword")}</span>{" "}
+        <Link href="/login" className="text-indigo-400 hover:text-indigo-300">
+          {t("forgotPassword.backToSignIn")}
+        </Link>
+      </div>
+      <div className="flex justify-center mt-6">
+        <LanguageSelector />
       </div>
     </div>
   );

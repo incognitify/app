@@ -1,25 +1,26 @@
 "use client";
 
-import Link from "next/link";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import toast from "react-hot-toast";
+import { useTranslation } from "@/lib/i18n/translation-provider";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { 
+import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { LanguageSelector } from "@/components/language-selector";
 
-// Define form validation schema
 const formSchema = z.object({
   email: z.string().email({
     message: "Please enter a valid email address.",
@@ -30,10 +31,10 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const { t } = useTranslation();
 
-  // Initialize form with validation schema
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,119 +43,94 @@ export function LoginForm() {
     },
   });
 
-  // Form submission handler
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+
     try {
-      setIsLoading(true);
-      
-      // Call the login API
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email: values.email,
-          password: values.password,
-        }),
+        body: JSON.stringify(values),
       });
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || 'Login failed');
+        throw new Error(error.message || t("toasts.loginError"));
       }
 
-      // Get user data from response
-      await response.json();
-      
-      // Show success message
-      toast.success("Logged in successfully!");
-      
-      // Navigate to dashboard or home page after successful login
-      router.push("/dashboard");
+      const data = await response.json();
+
+      // Store the token in localStorage or a secure cookie
+      localStorage.setItem("token", data.token);
+
+      toast.success(t("toasts.loginSuccess"));
+
+      // Redirect to dashboard or home page
+      router.push("/");
     } catch (error) {
       console.error("Login failed:", error);
-      toast.error(error instanceof Error ? error.message : "Invalid email or password");
+      toast.error(error instanceof Error ? error.message : t("toasts.loginError"));
     } finally {
       setIsLoading(false);
     }
   }
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-sm space-y-6">
       <div className="space-y-2 text-center">
-        <h1 className="text-3xl font-bold">Sign in to your account</h1>
+        <h1 className="text-3xl font-bold">{t("login.title")}</h1>
       </div>
-
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email address</FormLabel>
+                <FormLabel>{t("login.emailLabel")}</FormLabel>
                 <FormControl>
-                  <Input 
-                    placeholder="name@example.com" 
-                    type="email"
-                    {...field} 
-                    className="bg-transparent border-gray-700 focus-visible:ring-gray-400"
-                    disabled={isLoading}
-                    aria-required="true"
-                  />
+                  <Input placeholder={t("login.emailPlaceholder")} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="password"
             render={({ field }) => (
               <FormItem>
                 <div className="flex items-center justify-between">
-                  <FormLabel>Password</FormLabel>
-                  <Link 
-                    href="/forgot-password" 
+                  <FormLabel>{t("login.passwordLabel")}</FormLabel>
+                  <Link
+                    href="/forgot-password"
                     className="text-sm text-indigo-400 hover:text-indigo-300"
                   >
-                    Forgot password?
+                    {t("login.forgotPassword")}
                   </Link>
                 </div>
                 <FormControl>
-                  <Input 
-                    type="password" 
-                    {...field} 
-                    className="bg-transparent border-gray-700 focus-visible:ring-gray-400"
-                    disabled={isLoading}
-                    aria-required="true"
-                  />
+                  <Input type="password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-
-          <Button 
-            type="submit" 
-            className="w-full bg-indigo-600 hover:bg-indigo-500 text-white"
-            disabled={isLoading}
-            aria-label="Sign in to your account"
-          >
-            {isLoading ? "Signing in..." : "Sign in"}
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? t("login.signingInButton") : t("login.signInButton")}
           </Button>
         </form>
       </Form>
-
-      <div className="text-center">
-        <p className="text-sm text-gray-400">
-          Not a member?{" "}
-          <Link href="/signup" className="text-indigo-400 hover:text-indigo-300">
-            Sign-up
-          </Link>
-        </p>
+      <div className="text-center text-sm">
+        <span className="text-gray-400">{t("login.notAMember")}</span>{" "}
+        <Link href="/signup" className="text-indigo-400 hover:text-indigo-300">
+          {t("login.signUpLink")}
+        </Link>
+      </div>
+      <div className="flex justify-center mt-6">
+        <LanguageSelector />
       </div>
     </div>
   );

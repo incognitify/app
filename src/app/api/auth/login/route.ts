@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     // Parse and validate request body
     const body = await request.json();
     const result = loginSchema.safeParse(body);
-    
+
     if (!result.success) {
       return NextResponse.json(
         { message: "Invalid input", errors: result.error.errors },
@@ -51,15 +51,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Simulate authentication failure
-    return NextResponse.json(
-      { message: "Invalid email or password" },
-      { status: 401 }
-    );
+    return NextResponse.json({ message: "Invalid email or password" }, { status: 401 });
   } catch (error) {
     console.error("Login error:", error);
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/ui/toast-provider";
+import { TranslationProvider } from "@/lib/i18n/translation-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Incognitify",
-  description: "Secure and private browsing experience",
+  description: "Secure and private communication platform",
 };
 
 export default function RootLayout({
@@ -25,11 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ToastProvider />
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <TranslationProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </TranslationProvider>
       </body>
     </html>
   );

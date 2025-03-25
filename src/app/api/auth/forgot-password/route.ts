@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     // Parse and validate request body
     const body = await request.json();
     const result = forgotPasswordSchema.safeParse(body);
-    
+
     if (!result.success) {
       return NextResponse.json(
         { message: "Invalid input", errors: result.error.errors },
@@ -44,9 +44,6 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error("Forgot password error:", error);
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }
