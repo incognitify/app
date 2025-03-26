@@ -1,0 +1,41 @@
+{
+  "page": {
+    "title": "Email Verification",
+    "loading": {
+      "message": "Verifying your email address..."
+    },
+    "success": {
+      "title": "Email Verified",
+      "message": "Your email has been successfully verified.",
+      "button": "Go to Login"
+    },
+    "error": {
+      "title": "Verification Failed",
+      "message": "We couldn't verify your email address.",
+      "tokenMissing": "Verification token is missing",
+      "expired": "Verification link has expired",
+      "invalid": "Invalid verification token",
+      "alreadyVerified": "Email is already verified",
+      "generic": "An error occurred while verifying your email",
+      "button": "Go to Home"
+    }
+  },
+  "api": {
+    "errors": {
+      "tokenRequired": "Verification token is required",
+      "invalidToken": "Invalid verification token",
+      "expiredToken": "Verification token has expired",
+      "alreadyVerified": "Email is already verified",
+      "serverError": "Failed to verify email",
+      "connectionError": "Failed to connect to verification service",
+      "nonJsonResponse": "External API returned non-JSON response"
+    },
+    "success": {
+      "verified": "Email verified successfully"
+    }
+  },
+  "toasts": {
+    "success": "Email verified successfully!",
+    "error": "Failed to verify email. Please try again."
+  }
+}
