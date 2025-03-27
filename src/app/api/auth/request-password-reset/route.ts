@@ -13,13 +13,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get the API base URL from environment variables
     const apiBaseUrl = process.env.API_BASE_URL || "https://api.udooku.com";
-    
-    // Get the project name from environment variables
     const projectName = process.env.PROJECT_NAME || "incognitify";
-    
-    // Define the API endpoint to forward the request to
     const apiUrl = `${apiBaseUrl}/users/request-password-reset`;
 
     console.log(`Forwarding password reset request to: ${apiUrl}`);
@@ -34,8 +29,8 @@ export async function POST(request: NextRequest) {
         },
         body: JSON.stringify({ 
           email,
-          language: language || "en", // Include the user's language, default to English if not provided
-          projectName // Include the project name from environment variables
+          language: language || "en",
+          projectName
         }),
       });
 
