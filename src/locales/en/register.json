@@ -1,0 +1,44 @@
+{
+  "page": {
+    "title": "Create Your Account",
+    "subtitle": "Join Incognitify to get started",
+    "form": {
+      "email": {
+        "label": "Email",
+        "placeholder": "Enter your email"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Create a password"
+      },
+      "displayName": {
+        "label": "Display Name",
+        "placeholder": "Enter your name"
+      },
+      "workspaceName": {
+        "label": "Workspace Name (Optional)",
+        "placeholder": "Enter your workspace name"
+      },
+      "projectName": {
+        "label": "Project Name",
+        "placeholder": "Enter your project name"
+      },
+      "submitButton": "Register",
+      "loginLink": "Already have an account? Log in"
+    },
+    "success": {
+      "title": "Registration Successful",
+      "message": "Your account has been created successfully. Please check your email to verify your account.",
+      "button": "Go to Login"
+    },
+    "error": {
+      "generic": "An error occurred during registration. Please try again.",
+      "emailInUse": "This email is already in use. Please try another one.",
+      "invalidInput": "Please check your input and try again.",
+      "button": "Try Again"
+    },
+    "loading": {
+      "message": "Creating your account..."
+    }
+  }
+}

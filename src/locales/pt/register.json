@@ -1,0 +1,44 @@
+{
+  "page": {
+    "title": "Crie Sua Conta",
+    "subtitle": "Junte-se ao Incognitify para começar",
+    "form": {
+      "email": {
+        "label": "Email",
+        "placeholder": "Digite seu email"
+      },
+      "password": {
+        "label": "Senha",
+        "placeholder": "Crie uma senha"
+      },
+      "displayName": {
+        "label": "Nome de Exibição",
+        "placeholder": "Digite seu nome"
+      },
+      "workspaceName": {
+        "label": "Nome do Espaço de Trabalho (Opicional)",
+        "placeholder": "Digite o nome do seu espaço de trabalho"
+      },
+      "projectName": {
+        "label": "Nome do Projeto",
+        "placeholder": "Digite o nome do seu projeto"
+      },
+      "submitButton": "Registrar",
+      "loginLink": "Já tem uma conta? Faça login"
+    },
+    "success": {
+      "title": "Registro Bem-sucedido",
+      "message": "Sua conta foi criada com sucesso. Por favor, verifique seu email para confirmar sua conta.",
+      "button": "Ir para Login"
+    },
+    "error": {
+      "generic": "Ocorreu um erro durante o registro. Por favor, tente novamente.",
+      "emailInUse": "Este email já está em uso. Por favor, tente outro.",
+      "invalidInput": "Por favor, verifique seus dados e tente novamente.",
+      "button": "Tentar Novamente"
+    },
+    "loading": {
+      "message": "Criando sua conta..."
+    }
+  }
+}
