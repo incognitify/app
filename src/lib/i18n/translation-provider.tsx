@@ -72,12 +72,16 @@ export function TranslationProvider({ children }: TranslationProviderProps) {
         // Load request password reset translations
         const requestPasswordResetTranslations = await loadTranslations(language, "request-password-reset");
 
+        // Load register translations
+        const registerTranslations = await loadTranslations(language, "register");
+
         // Set all translations
         setTranslations({
           auth: authTranslations,
           "verify-email": verifyEmailTranslations,
           "reset-password": resetPasswordTranslations,
           "request-password-reset": requestPasswordResetTranslations,
+          "register": registerTranslations,
         });
       } catch (error) {
         console.error("Failed to load translations:", error);

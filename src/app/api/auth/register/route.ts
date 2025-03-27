@@ -12,6 +12,8 @@ const registerSchema = z.object({
   password: z.string().min(8, {
     message: "Password must be at least 8 characters.",
   }),
+  workspaceName: z.string().optional(),
+  language: z.string().default("en"),
 });
 
 export async function POST(request: NextRequest) {
@@ -27,38 +29,79 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { displayName, email, password } = result.data;
+    const { displayName, email, password, workspaceName, language } = result.data;
+    
+    // Set default workspace name if not provided
+    const finalWorkspaceName = workspaceName || `${displayName}'s Workspace`;
 
-    // This is a mock implementation - replace with your actual registration logic
-    // In a real implementation, you would:
-    // 1. Check if the user already exists
-    // 2. Hash the password
-    // 3. Store the user in your database
-    // 4. Send a verification email
-    // 5. Return a success response
+    const apiBaseUrl = process.env.API_BASE_URL || "https://api.udooku.com";
+    const projectName = process.env.PROJECT_NAME || "incognitify";
+    const apiUrl = `${apiBaseUrl}/users`;
 
-    // Simulate checking if email already exists
-    if (email === "demo@example.com") {
-      return NextResponse.json({ message: "Email already in use" }, { status: 409 });
-    }
+    console.log(`Forwarding registration request to: ${apiUrl}`);
 
-    // Log password length for validation (in a real app, you would hash it)
-    console.log(`Password length: ${password.length}`);
-
-    // Simulate successful registration
-    return NextResponse.json(
-      {
-        message: "Registration successful",
-        user: {
-          id: "user_" + Math.floor(Math.random() * 1000),
-          email,
-          displayName,
+    console.log('Values:', {
+      email,
+      password,
+      displayName,
+      projectName,
+      workspaceName: finalWorkspaceName,
+      language,
+    });
+    
+    try {
+      // Forward the request to the external API
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      },
-      { status: 201 }
-    );
-  } catch (error) {
+        body: JSON.stringify({
+          email,
+          password,
+          displayName,
+          projectName,
+          workspaceName: finalWorkspaceName,
+          language,
+        }),
+      });
+
+      // Check if the response is JSON
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        // Parse JSON response
+        const data = await response.json();
+        return NextResponse.json(data, { status: response.status });
+      } else {
+        // Handle non-JSON response
+        const text = await response.text();
+        console.log(`Received non-JSON response: ${text.substring(0, 100)}...`);
+        
+        // Return a formatted error response
+        return NextResponse.json(
+          { 
+            message: "Registration failed", 
+            error: "External API returned non-JSON response",
+            status: response.status
+          }, 
+          { status: 500 }
+        );
+      }
+    } catch (fetchError: any) {
+      console.error("Fetch error:", fetchError);
+      return NextResponse.json(
+        { 
+          message: "Failed to connect to registration service", 
+          error: fetchError.message || "Unknown fetch error"
+        }, 
+        { status: 502 }
+      );
+    }
+  } catch (error: any) {
     console.error("Registration error:", error);
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { message: "Failed to register user", error: error.message || "Unknown error" },
+      { status: 500 }
+    );
   }
 }
