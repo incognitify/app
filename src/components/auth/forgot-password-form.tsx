@@ -29,7 +29,7 @@ const formSchema = z.object({
 export function ForgotPasswordForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,17 +42,21 @@ export function ForgotPasswordForm() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/auth/forgot-password", {
+      const response = await fetch("/api/auth/request-password-reset", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          ...values,
+          language
+        }),
       });
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || "Failed to request password reset");
+        toast.error(error.message || t("toasts.forgotPasswordError"));
+        return;
       }
 
       toast.success(t("toasts.forgotPasswordSuccess"));
