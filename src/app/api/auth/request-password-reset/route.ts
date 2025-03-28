@@ -57,13 +57,18 @@ export async function POST(request: NextRequest) {
       }
     } catch (fetchError: any) {
       console.error("Fetch error:", fetchError);
-      return NextResponse.json(
-        { 
-          message: "Failed to connect to password reset service", 
-          error: fetchError.message || "Unknown fetch error"
-        }, 
-        { status: 502 }
-      );
+      // Provide more detailed error information
+      const errorDetails = {
+        message: "Failed to connect to password reset service",
+        error: fetchError.message || "Unknown fetch error",
+        cause: fetchError.cause ? 
+          { code: fetchError.cause.code, message: fetchError.cause.message } : 
+          "No cause details available",
+        url: apiUrl
+      };
+      console.error("Detailed error:", JSON.stringify(errorDetails, null, 2));
+      
+      return NextResponse.json(errorDetails, { status: 502 });
     }
   } catch (error: any) {
     console.error("Password reset request error:", error);
