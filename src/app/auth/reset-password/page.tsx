@@ -12,7 +12,7 @@ export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const { t, language } = useTranslation();
-  
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -34,29 +34,29 @@ export default function ResetPasswordPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Reset errors
     setPasswordError("");
     setConfirmPasswordError("");
-    
+
     // Validate password
     if (!password) {
       setPasswordError(t("page.error.passwordMissing", "reset-password"));
       return;
     }
-    
+
     if (!validatePassword(password)) {
       setPasswordError(t("page.error.passwordTooShort", "reset-password"));
       return;
     }
-    
+
     if (password !== confirmPassword) {
       setConfirmPasswordError(t("page.error.passwordsNotMatch", "reset-password"));
       return;
     }
-    
+
     setStatus("loading");
-    
+
     try {
       // Call our API route which will forward the request to the external API
       const response = await fetch("/api/auth/reset-password", {
@@ -64,10 +64,10 @@ export default function ResetPasswordPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ 
-          token, 
+        body: JSON.stringify({
+          token,
           password,
-          language
+          language,
         }),
       });
 
@@ -78,7 +78,7 @@ export default function ResetPasswordPage() {
         setMessage(data.message || t("page.success.message", "reset-password"));
       } else {
         setStatus("error");
-        
+
         // Map error messages to translation keys if possible
         let errorKey = "page.error.generic";
         if (data.error === "Reset token is required") {
@@ -92,7 +92,7 @@ export default function ResetPasswordPage() {
         } else if (data.error === "Password must be at least 8 characters") {
           errorKey = "page.error.passwordTooShort";
         }
-        
+
         setMessage(data.message || t(errorKey, "reset-password"));
       }
     } catch (error) {
@@ -109,13 +109,11 @@ export default function ResetPasswordPage() {
           <h1 className="text-2xl font-bold">{t("page.title", "reset-password")}</h1>
           <p className="mt-2 text-gray-400">{t("page.subtitle", "reset-password")}</p>
         </div>
-        
+
         {status === "idle" && token && (
           <form onSubmit={handleSubmit} className="mt-8 space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="password">
-                {t("page.form.password.label", "reset-password")}
-              </Label>
+              <Label htmlFor="password">{t("page.form.password.label", "reset-password")}</Label>
               <Input
                 id="password"
                 type="password"
@@ -125,11 +123,9 @@ export default function ResetPasswordPage() {
                 className="bg-gray-900 border-gray-700"
                 aria-invalid={!!passwordError}
               />
-              {passwordError && (
-                <p className="text-sm text-red-400">{passwordError}</p>
-              )}
+              {passwordError && <p className="text-sm text-red-400">{passwordError}</p>}
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="confirmPassword">
                 {t("page.form.confirmPassword.label", "reset-password")}
@@ -147,23 +143,20 @@ export default function ResetPasswordPage() {
                 <p className="text-sm text-red-400">{confirmPasswordError}</p>
               )}
             </div>
-            
-            <Button
-              type="submit"
-              className="w-full"
-            >
+
+            <Button type="submit" className="w-full">
               {t("page.form.submit", "reset-password")}
             </Button>
           </form>
         )}
-        
+
         {status === "loading" && (
           <div className="mt-4 space-y-4">
             <div className="mx-auto h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-primary"></div>
             <p>{t("page.loading.message", "reset-password")}</p>
           </div>
         )}
-        
+
         {status === "success" && (
           <div className="mt-4 space-y-4">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-900">
@@ -186,15 +179,12 @@ export default function ResetPasswordPage() {
               {t("page.success.title", "reset-password")}
             </h2>
             <p className="text-gray-300">{t("page.success.message", "reset-password")}</p>
-            <Button
-              onClick={() => router.push("/login")}
-              className="mt-4 w-full cursor-pointer"
-            >
+            <Button onClick={() => router.push("/login")} className="mt-4 w-full cursor-pointer">
               {t("page.success.button", "reset-password")}
             </Button>
           </div>
         )}
-        
+
         {status === "error" && (
           <div className="mt-4 space-y-4">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-900">

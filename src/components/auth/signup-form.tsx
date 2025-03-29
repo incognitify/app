@@ -66,7 +66,7 @@ export function SignupForm() {
     if (displayName) {
       const newDefaultWorkspaceName = `${displayName}'s Workspace`;
       setDefaultWorkspaceName(newDefaultWorkspaceName);
-      
+
       // Only update the workspace name field if it's empty or was the previous default
       if (!workspaceNameValue || workspaceNameValue === defaultWorkspaceName) {
         form.setValue("workspaceName", newDefaultWorkspaceName);
@@ -148,9 +148,9 @@ export function SignupForm() {
               <FormItem>
                 <FormLabel>{t("signup.workspaceNameLabel")}</FormLabel>
                 <FormControl>
-                  <Input 
-                    placeholder={defaultWorkspaceName || t("signup.workspaceNamePlaceholder")} 
-                    {...field} 
+                  <Input
+                    placeholder={defaultWorkspaceName || t("signup.workspaceNamePlaceholder")}
+                    {...field}
                   />
                 </FormControl>
                 <FormMessage />

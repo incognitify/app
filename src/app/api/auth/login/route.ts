@@ -37,12 +37,8 @@ export async function POST(request: NextRequest) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // Add any additional headers needed for your API
         },
-        body: JSON.stringify({ 
-          email,
-          password
-        }),
+        body: JSON.stringify({ email, password }),
       });
 
       // Check if the response is JSON
@@ -55,36 +51,45 @@ export async function POST(request: NextRequest) {
         // Handle non-JSON response
         const text = await response.text();
         console.log(`Received non-JSON response: ${text.substring(0, 100)}...`);
-        
+
         // Return a formatted error response
         return NextResponse.json(
-          { 
-            message: "Login failed", 
+          {
+            message: "Login failed",
             error: "External API returned non-JSON response",
-            status: response.status
-          }, 
+            status: response.status,
+          },
           { status: 500 }
         );
       }
-    } catch (fetchError: any) {
+    } catch (fetchError: unknown) {
       console.error("Fetch error:", fetchError);
       // Provide more detailed error information
+      type ErrorWithCause = Error & { cause?: { code: string; message: string } };
+
       const errorDetails = {
         message: "Failed to connect to authentication service",
-        error: fetchError.message || "Unknown fetch error",
-        cause: fetchError.cause ? 
-          { code: fetchError.cause.code, message: fetchError.cause.message } : 
-          "No cause details available",
-        url: apiUrl
+        error: fetchError instanceof Error ? fetchError.message : "Unknown fetch error",
+        cause:
+          fetchError instanceof Error && "cause" in fetchError && fetchError.cause
+            ? {
+                code: (fetchError as ErrorWithCause).cause?.code || "unknown",
+                message: (fetchError as ErrorWithCause).cause?.message || "unknown",
+              }
+            : "No cause details available",
+        url: apiUrl,
       };
       console.error("Detailed error:", JSON.stringify(errorDetails, null, 2));
-      
+
       return NextResponse.json(errorDetails, { status: 502 });
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Login error:", error);
     return NextResponse.json(
-      { message: "Internal server error", error: error.message || "Unknown error" },
+      {
+        message: "Internal server error",
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
       { status: 500 }
     );
   }

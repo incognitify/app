@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { displayName, email, password, workspaceName, language } = result.data;
-    
+
     // Set default workspace name if not provided
     const finalWorkspaceName = workspaceName || `${displayName}'s Workspace`;
 
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
 
     console.log(`Forwarding registration request to: ${apiUrl}`);
 
-    console.log('Values:', {
+    console.log("Values:", {
       email,
       password,
       displayName,
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
       workspaceName: finalWorkspaceName,
       language,
     });
-    
+
     try {
       // Forward the request to the external API
       const response = await fetch(apiUrl, {
@@ -76,24 +76,24 @@ export async function POST(request: NextRequest) {
         // Handle non-JSON response
         const text = await response.text();
         console.log(`Received non-JSON response: ${text.substring(0, 100)}...`);
-        
+
         // Return a formatted error response
         return NextResponse.json(
-          { 
-            message: "Registration failed", 
+          {
+            message: "Registration failed",
             error: "External API returned non-JSON response",
-            status: response.status
-          }, 
+            status: response.status,
+          },
           { status: 500 }
         );
       }
     } catch (fetchError: any) {
       console.error("Fetch error:", fetchError);
       return NextResponse.json(
-        { 
-          message: "Failed to connect to registration service", 
-          error: fetchError.message || "Unknown fetch error"
-        }, 
+        {
+          message: "Failed to connect to registration service",
+          error: fetchError.message || "Unknown fetch error",
+        },
         { status: 502 }
       );
     }
