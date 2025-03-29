@@ -26,34 +26,66 @@ export async function POST(request: NextRequest) {
 
     const { email, password } = result.data;
 
-    // This is a mock implementation - replace with your actual authentication logic
-    // In a real implementation, you would:
-    // 1. Check if the user exists in your database
-    // 2. Verify the password against the stored hash
-    // 3. Generate a JWT or session token
-    // 4. Return the token to the client
+    const apiBaseUrl = process.env.API_BASE_URL || "https://api.udooku.com";
+    const apiUrl = `${apiBaseUrl}/users/login`;
 
-    // For demo purposes, we'll simulate a successful login for a specific email
-    if (email === "demo@example.com" && password === "password123") {
-      return NextResponse.json(
-        {
-          message: "Login successful",
-          user: {
-            id: "user_123",
-            email: email,
-            displayName: "Demo User",
-          },
-          // In a real implementation, you would generate a JWT here
-          token: "mock_jwt_token",
+    console.log(`Forwarding login request to: ${apiUrl}`);
+
+    try {
+      // Forward the request to the external API
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Add any additional headers needed for your API
         },
-        { status: 200 }
-      );
-    }
+        body: JSON.stringify({ 
+          email,
+          password
+        }),
+      });
 
-    // Simulate authentication failure
-    return NextResponse.json({ message: "Invalid email or password" }, { status: 401 });
-  } catch (error) {
+      // Check if the response is JSON
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        // Parse JSON response
+        const data = await response.json();
+        return NextResponse.json(data, { status: response.status });
+      } else {
+        // Handle non-JSON response
+        const text = await response.text();
+        console.log(`Received non-JSON response: ${text.substring(0, 100)}...`);
+        
+        // Return a formatted error response
+        return NextResponse.json(
+          { 
+            message: "Login failed", 
+            error: "External API returned non-JSON response",
+            status: response.status
+          }, 
+          { status: 500 }
+        );
+      }
+    } catch (fetchError: any) {
+      console.error("Fetch error:", fetchError);
+      // Provide more detailed error information
+      const errorDetails = {
+        message: "Failed to connect to authentication service",
+        error: fetchError.message || "Unknown fetch error",
+        cause: fetchError.cause ? 
+          { code: fetchError.cause.code, message: fetchError.cause.message } : 
+          "No cause details available",
+        url: apiUrl
+      };
+      console.error("Detailed error:", JSON.stringify(errorDetails, null, 2));
+      
+      return NextResponse.json(errorDetails, { status: 502 });
+    }
+  } catch (error: any) {
     console.error("Login error:", error);
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { message: "Internal server error", error: error.message || "Unknown error" },
+      { status: 500 }
+    );
   }
 }
