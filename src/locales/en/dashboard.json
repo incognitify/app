@@ -1,0 +1,55 @@
+{
+  "sidebar": {
+    "title": "Dashboard",
+    "nav": {
+      "dashboard": "Dashboard",
+      "generate": "Generate",
+      "history": "History",
+      "support": "Support"
+    },
+    "user": {
+      "profile": "User",
+      "logout": "Logout"
+    }
+  },
+  "generate": {
+    "title": "How can I help you to generate a blog post?",
+    "placeholder": "Type anything...",
+    "buttons": {
+      "fromUrl": "Generate from url",
+      "fromTopic": "Generate from topic"
+    }
+  },
+  "history": {
+    "title": "History",
+    "noHistory": "No history yet"
+  },
+  "dashboard": {
+    "title": "Dashboard Overview",
+    "recentActivity": {
+      "title": "Recent Activity",
+      "noActivity": "No recent activity"
+    },
+    "statistics": {
+      "title": "Statistics",
+      "noStats": "No statistics available"
+    }
+  },
+  "support": {
+    "title": "Support Center",
+    "description": "Need help with something? We're here to assist you.",
+    "contactInfo": "Contact Information",
+    "email": "support@incognitify.com",
+    "phone": "+1 (555) 123-4567",
+    "hours": "Available Monday to Friday, 9 AM - 5 PM PST",
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": "How do I generate a blog post?",
+      "a1": "Navigate to the Generate tab and either type your topic or paste a URL to generate content from.",
+      "q2": "Can I edit generated content?",
+      "a2": "Yes, all generated content can be edited before publishing.",
+      "q3": "How do I change my account settings?",
+      "a3": "Go to your profile by clicking on your avatar in the sidebar and select 'Settings'."
+    }
+  }
+}

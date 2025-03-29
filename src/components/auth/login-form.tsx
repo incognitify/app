@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useTranslation } from "@/lib/i18n/translation-provider";
+import { setToken } from "@/lib/auth/auth-utils";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -62,13 +63,13 @@ export function LoginForm() {
 
       const data = await response.json();
 
-      // Store the token in localStorage or a secure cookie
-      localStorage.setItem("token", data.token);
+      // Store the token using our auth utility
+      setToken(data.token);
 
       toast.success(t("toasts.loginSuccess"));
 
-      // Redirect to dashboard or home page
-      router.push("/");
+      // Redirect to dashboard instead of home page
+      router.push("/dashboard");
     } catch (error) {
       console.error("Login failed:", error);
       toast.error(error instanceof Error ? error.message : t("toasts.loginError"));

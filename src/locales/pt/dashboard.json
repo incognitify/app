@@ -1,0 +1,55 @@
+{
+  "sidebar": {
+    "title": "Painel",
+    "nav": {
+      "dashboard": "Painel",
+      "generate": "Gerar",
+      "history": "Histórico",
+      "support": "Suporte"
+    },
+    "user": {
+      "profile": "Usuário",
+      "logout": "Sair"
+    }
+  },
+  "generate": {
+    "title": "Como posso ajudar você a gerar um post de blog?",
+    "placeholder": "Digite qualquer coisa...",
+    "buttons": {
+      "fromUrl": "Gerar a partir de URL",
+      "fromTopic": "Gerar a partir de tópico"
+    }
+  },
+  "history": {
+    "title": "Histórico",
+    "noHistory": "Nenhum histórico ainda"
+  },
+  "dashboard": {
+    "title": "Visão Geral do Painel",
+    "recentActivity": {
+      "title": "Atividade Recente",
+      "noActivity": "Nenhuma atividade recente"
+    },
+    "statistics": {
+      "title": "Estatísticas",
+      "noStats": "Nenhuma estatística disponível"
+    }
+  },
+  "support": {
+    "title": "Central de Suporte",
+    "description": "Precisa de ajuda com algo? Estamos aqui para ajudar você.",
+    "contactInfo": "Informações de Contato",
+    "email": "suporte@incognitify.com",
+    "phone": "+1 (555) 123-4567",
+    "hours": "Disponível de segunda a sexta, das 9h às 17h PST",
+    "faq": {
+      "title": "Perguntas Frequentes",
+      "q1": "Como gero um post de blog?",
+      "a1": "Navegue até a aba Gerar e digite seu tópico ou cole uma URL para gerar conteúdo.",
+      "q2": "Posso editar o conteúdo gerado?",
+      "a2": "Sim, todo o conteúdo gerado pode ser editado antes da publicação.",
+      "q3": "Como altero as configurações da minha conta?",
+      "a3": "Vá para o seu perfil clicando no seu avatar na barra lateral e selecione 'Configurações'."
+    }
+  }
+}
