@@ -62,20 +62,22 @@ export async function POST(request: NextRequest) {
           { status: 500 }
         );
       }
-    } catch (fetchError: any) {
+    } catch (fetchError: unknown) {
       console.error("Fetch error:", fetchError);
+      const errorMessage = fetchError instanceof Error ? fetchError.message : "Unknown fetch error";
       return NextResponse.json(
         {
           message: "Failed to connect to password reset service",
-          error: fetchError.message || "Unknown fetch error",
+          error: errorMessage,
         },
         { status: 502 }
       );
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Password reset error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { message: "Failed to reset password", error: error.message || "Unknown error" },
+      { message: "Failed to reset password", error: errorMessage },
       { status: 500 }
     );
   }

@@ -16,7 +16,6 @@ export default function ResetPasswordPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [message, setMessage] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
   const [confirmPasswordError, setConfirmPasswordError] = useState<string>("");
 
@@ -24,9 +23,8 @@ export default function ResetPasswordPage() {
     // Check if token is present
     if (!token) {
       setStatus("error");
-      setMessage(t("page.error.tokenMissing", "reset-password"));
     }
-  }, [token, t]);
+  }, [token]);
 
   const validatePassword = (password: string) => {
     return password.length >= 8;
@@ -75,7 +73,6 @@ export default function ResetPasswordPage() {
 
       if (response.ok) {
         setStatus("success");
-        setMessage(data.message || t("page.success.message", "reset-password"));
       } else {
         setStatus("error");
 
@@ -93,12 +90,11 @@ export default function ResetPasswordPage() {
           errorKey = "page.error.passwordTooShort";
         }
 
-        setMessage(data.message || t(errorKey, "reset-password"));
+        setPasswordError(data.message || t(errorKey, "reset-password"));
       }
     } catch (error) {
       console.error("Error resetting password:", error);
       setStatus("error");
-      setMessage(t("page.error.generic", "reset-password"));
     }
   };
 
@@ -206,7 +202,9 @@ export default function ResetPasswordPage() {
             <h2 className="text-xl font-semibold text-red-400">
               {t("page.error.title", "reset-password")}
             </h2>
-            <p className="text-red-300">{t("page.error.generic", "reset-password")}</p>
+            <p className="text-red-300">
+              {passwordError || t("page.error.generic", "reset-password")}
+            </p>
             <Button
               onClick={() => router.push("/auth/request-password-reset")}
               className="mt-4 w-full cursor-pointer"
