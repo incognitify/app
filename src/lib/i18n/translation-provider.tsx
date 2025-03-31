@@ -62,18 +62,24 @@ export function TranslationProvider({ children }: TranslationProviderProps) {
       try {
         // Load auth translations
         const authTranslations = await loadTranslations(language, "auth");
-        
+
         // Load email verification translations
         const verifyEmailTranslations = await loadTranslations(language, "verify-email");
-        
+
         // Load password reset translations
         const resetPasswordTranslations = await loadTranslations(language, "reset-password");
-        
+
         // Load request password reset translations
-        const requestPasswordResetTranslations = await loadTranslations(language, "request-password-reset");
+        const requestPasswordResetTranslations = await loadTranslations(
+          language,
+          "request-password-reset"
+        );
 
         // Load register translations
         const registerTranslations = await loadTranslations(language, "register");
+
+        // Load dashboard translations
+        const dashboardTranslations = await loadTranslations(language, "dashboard");
 
         // Set all translations
         setTranslations({
@@ -81,7 +87,8 @@ export function TranslationProvider({ children }: TranslationProviderProps) {
           "verify-email": verifyEmailTranslations,
           "reset-password": resetPasswordTranslations,
           "request-password-reset": requestPasswordResetTranslations,
-          "register": registerTranslations,
+          register: registerTranslations,
+          dashboard: dashboardTranslations,
         });
       } catch (error) {
         console.error("Failed to load translations:", error);

@@ -37,5 +37,19 @@
   "toasts": {
     "success": "Email verified successfully!",
     "error": "Failed to verify email. Please try again."
+  },
+  "title": "Email Verification Required",
+  "description": "Please verify your email address to continue using Incognitify.",
+  "instructions": "We've sent a verification link to your email address. Please check your inbox and click the link to verify your email. If you don't see the email, check your spam folder or click the button below to resend the verification email.",
+  "buttons": {
+    "resend": "Resend Verification Email",
+    "sending": "Sending...",
+    "checkAgain": "I've Verified My Email"
+  },
+  "success": {
+    "emailSent": "Verification email sent successfully. Please check your inbox."
+  },
+  "errors": {
+    "sendFailed": "Failed to send verification email. Please try again later."
   }
 }

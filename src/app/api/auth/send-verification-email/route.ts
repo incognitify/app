@@ -1,35 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-
-// Define validation schema for login request
-const loginSchema = z.object({
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  password: z.string().min(6, {
-    message: "Password must be at least 6 characters.",
-  }),
-});
 
 export async function POST(request: NextRequest) {
   try {
-    // Parse and validate request body
-    const body = await request.json();
-    const result = loginSchema.safeParse(body);
-
-    if (!result.success) {
-      return NextResponse.json(
-        { message: "Invalid input", errors: result.error.errors },
-        { status: 400 }
-      );
+    // Get the token from the Authorization header
+    const authHeader = request.headers.get("Authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const { email, password } = result.data;
+    const token = authHeader.substring(7); // Remove "Bearer " prefix
 
     const apiBaseUrl = process.env.API_BASE_URL || "https://api.udooku.com";
-    const apiUrl = `${apiBaseUrl}/users/login`;
+    const apiUrl = `${apiBaseUrl}/users/resend-verification-email`;
 
-    console.log(`Forwarding login request to: ${apiUrl}`);
+    console.log(`Forwarding verification email request to: ${apiUrl}`);
 
     try {
       // Forward the request to the external API
@@ -37,8 +21,8 @@ export async function POST(request: NextRequest) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ email, password }),
       });
 
       // Check if the response is JSON
@@ -55,7 +39,7 @@ export async function POST(request: NextRequest) {
         // Return a formatted error response
         return NextResponse.json(
           {
-            message: "Login failed",
+            message: "Failed to send verification email",
             error: "External API returned non-JSON response",
             status: response.status,
           },
@@ -68,7 +52,7 @@ export async function POST(request: NextRequest) {
       type ErrorWithCause = Error & { cause?: { code: string; message: string } };
 
       const errorDetails = {
-        message: "Failed to connect to authentication service",
+        message: "Failed to connect to verification email service",
         error: fetchError instanceof Error ? fetchError.message : "Unknown fetch error",
         cause:
           fetchError instanceof Error && "cause" in fetchError && fetchError.cause
@@ -84,7 +68,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(errorDetails, { status: 502 });
     }
   } catch (error: unknown) {
-    console.error("Login error:", error);
+    console.error("Verification email error:", error);
     return NextResponse.json(
       {
         message: "Internal server error",

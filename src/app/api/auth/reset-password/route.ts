@@ -7,25 +7,19 @@ export async function POST(request: NextRequest) {
     const { token, password, language } = body;
 
     if (!token) {
-      return NextResponse.json(
-        { message: "Reset token is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "Reset token is required" }, { status: 400 });
     }
 
     if (!password) {
-      return NextResponse.json(
-        { message: "New password is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "New password is required" }, { status: 400 });
     }
 
     // Get the API base URL from environment variables
     const apiBaseUrl = process.env.API_BASE_URL || "https://api.udooku.com";
-    
+
     // Get the project name from environment variables
     const projectName = process.env.PROJECT_NAME || "incognitify";
-    
+
     // Define the API endpoint to forward the request to
     const apiUrl = `${apiBaseUrl}/users/reset-password`;
 
@@ -39,11 +33,11 @@ export async function POST(request: NextRequest) {
           "Content-Type": "application/json",
           // Add any additional headers needed for your API
         },
-        body: JSON.stringify({ 
-          token, 
+        body: JSON.stringify({
+          token,
           newPassword: password,
           language: language || "en", // Include the user's language, default to English if not provided
-          projectName // Include the project name from environment variables
+          projectName, // Include the project name from environment variables
         }),
       });
 
@@ -57,24 +51,24 @@ export async function POST(request: NextRequest) {
         // Handle non-JSON response
         const text = await response.text();
         console.log(`Received non-JSON response: ${text.substring(0, 100)}...`);
-        
+
         // Return a formatted error response
         return NextResponse.json(
-          { 
-            message: "Password reset failed", 
+          {
+            message: "Password reset failed",
             error: "External API returned non-JSON response",
-            status: response.status
-          }, 
+            status: response.status,
+          },
           { status: 500 }
         );
       }
     } catch (fetchError: any) {
       console.error("Fetch error:", fetchError);
       return NextResponse.json(
-        { 
-          message: "Failed to connect to password reset service", 
-          error: fetchError.message || "Unknown fetch error"
-        }, 
+        {
+          message: "Failed to connect to password reset service",
+          error: fetchError.message || "Unknown fetch error",
+        },
         { status: 502 }
       );
     }

@@ -10,7 +10,7 @@ export default function VerifyEmailPage() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const { t } = useTranslation();
-  
+
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [message, setMessage] = useState<string>("");
 
@@ -35,7 +35,7 @@ export default function VerifyEmailPage() {
           setMessage(data.message || t("page.success.message", "verify-email"));
         } else {
           setStatus("error");
-          
+
           // Map error messages to translation keys if possible
           let errorKey = "page.error.generic";
           if (data.error === "Invalid verification token") {
@@ -45,7 +45,7 @@ export default function VerifyEmailPage() {
           } else if (data.error === "Email is already verified") {
             errorKey = "page.error.alreadyVerified";
           }
-          
+
           setMessage(data.message || t(errorKey, "verify-email"));
         }
       } catch (error) {
@@ -63,14 +63,14 @@ export default function VerifyEmailPage() {
       <div className="w-full max-w-md space-y-8 rounded-lg border border-gray-800 bg-black p-6 shadow-md">
         <div className="text-center">
           <h1 className="text-2xl font-bold">{t("page.title", "verify-email")}</h1>
-          
+
           {status === "loading" && (
             <div className="mt-4 space-y-4">
               <div className="mx-auto h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-primary"></div>
               <p>{t("page.loading.message", "verify-email")}</p>
             </div>
           )}
-          
+
           {status === "success" && (
             <div className="mt-4 space-y-4">
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-900">
@@ -90,15 +90,12 @@ export default function VerifyEmailPage() {
                 </svg>
               </div>
               <p className="text-green-400">{message}</p>
-              <Button
-                onClick={() => router.push("/login")}
-                className="mt-4 w-full cursor-pointer"
-              >
+              <Button onClick={() => router.push("/login")} className="mt-4 w-full cursor-pointer">
                 {t("page.success.button", "verify-email")}
               </Button>
             </div>
           )}
-          
+
           {status === "error" && (
             <div className="mt-4 space-y-4">
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-900">
@@ -118,10 +115,7 @@ export default function VerifyEmailPage() {
                 </svg>
               </div>
               <p className="text-red-400">{message}</p>
-              <Button
-                onClick={() => router.push("/")}
-                className="mt-4 w-full cursor-pointer"
-              >
+              <Button onClick={() => router.push("/")} className="mt-4 w-full cursor-pointer">
                 {t("page.error.button", "verify-email")}
               </Button>
             </div>

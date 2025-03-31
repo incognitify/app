@@ -7,10 +7,7 @@ export async function POST(request: NextRequest) {
     const { email, language } = body;
 
     if (!email) {
-      return NextResponse.json(
-        { message: "Email is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "Email is required" }, { status: 400 });
     }
 
     const apiBaseUrl = process.env.API_BASE_URL || "https://api.udooku.com";
@@ -27,10 +24,10 @@ export async function POST(request: NextRequest) {
           "Content-Type": "application/json",
           // Add any additional headers needed for your API
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           email,
           language: language || "en",
-          projectName
+          projectName,
         }),
       });
 
@@ -44,14 +41,14 @@ export async function POST(request: NextRequest) {
         // Handle non-JSON response
         const text = await response.text();
         console.log(`Received non-JSON response: ${text.substring(0, 100)}...`);
-        
+
         // Return a formatted error response
         return NextResponse.json(
-          { 
-            message: "Password reset request failed", 
+          {
+            message: "Password reset request failed",
             error: "External API returned non-JSON response",
-            status: response.status
-          }, 
+            status: response.status,
+          },
           { status: 500 }
         );
       }
@@ -61,13 +58,13 @@ export async function POST(request: NextRequest) {
       const errorDetails = {
         message: "Failed to connect to password reset service",
         error: fetchError.message || "Unknown fetch error",
-        cause: fetchError.cause ? 
-          { code: fetchError.cause.code, message: fetchError.cause.message } : 
-          "No cause details available",
-        url: apiUrl
+        cause: fetchError.cause
+          ? { code: fetchError.cause.code, message: fetchError.cause.message }
+          : "No cause details available",
+        url: apiUrl,
       };
       console.error("Detailed error:", JSON.stringify(errorDetails, null, 2));
-      
+
       return NextResponse.json(errorDetails, { status: 502 });
     }
   } catch (error: any) {

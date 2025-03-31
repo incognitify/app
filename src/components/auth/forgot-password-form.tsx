@@ -49,7 +49,7 @@ export function ForgotPasswordForm() {
         },
         body: JSON.stringify({
           ...values,
-          language
+          language,
         }),
       });
 

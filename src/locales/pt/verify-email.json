@@ -37,5 +37,19 @@
   "toasts": {
     "success": "Email verificado com sucesso!",
     "error": "Falha ao verificar email. Por favor, tente novamente."
+  },
+  "title": "Verificação de Email Necessária",
+  "description": "Por favor, verifique seu endereço de email para continuar usando o Incognitify.",
+  "instructions": "Enviamos um link de verificação para o seu endereço de email. Por favor, verifique sua caixa de entrada e clique no link para verificar seu email. Se você não vir o email, verifique sua pasta de spam ou clique no botão abaixo para reenviar o email de verificação.",
+  "buttons": {
+    "resend": "Reenviar Email de Verificação",
+    "sending": "Enviando...",
+    "checkAgain": "Já Verifiquei Meu Email"
+  },
+  "success": {
+    "emailSent": "Email de verificação enviado com sucesso. Por favor, verifique sua caixa de entrada."
+  },
+  "errors": {
+    "sendFailed": "Falha ao enviar email de verificação. Por favor, tente novamente mais tarde."
   }
 }

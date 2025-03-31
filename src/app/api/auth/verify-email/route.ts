@@ -7,18 +7,15 @@ export async function GET(request: NextRequest) {
     const token = searchParams.get("token");
 
     if (!token) {
-      return NextResponse.json(
-        { message: "Verification token is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "Verification token is required" }, { status: 400 });
     }
 
     // Get the API base URL from environment variables
     const apiBaseUrl = process.env.API_BASE_URL || "https://api.udooku.com";
-    
+
     // Define the API endpoint to forward the request to
     const apiUrl = new URL(`${apiBaseUrl}/users/verify-email`);
-    
+
     // Add the token to the query parameters
     apiUrl.searchParams.set("token", token);
 
@@ -44,24 +41,24 @@ export async function GET(request: NextRequest) {
         // Handle non-JSON response
         const text = await response.text();
         console.log(`Received non-JSON response: ${text.substring(0, 100)}...`);
-        
+
         // Return a formatted error response
         return NextResponse.json(
-          { 
-            message: "Email verification failed", 
+          {
+            message: "Email verification failed",
             error: "External API returned non-JSON response",
-            status: response.status
-          }, 
+            status: response.status,
+          },
           { status: 500 }
         );
       }
     } catch (fetchError: any) {
       console.error("Fetch error:", fetchError);
       return NextResponse.json(
-        { 
-          message: "Failed to connect to verification service", 
-          error: fetchError.message || "Unknown fetch error"
-        }, 
+        {
+          message: "Failed to connect to verification service",
+          error: fetchError.message || "Unknown fetch error",
+        },
         { status: 502 }
       );
     }
