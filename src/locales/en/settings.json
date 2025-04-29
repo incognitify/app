@@ -1,0 +1,19 @@
+{
+  "title": "Settings",
+  "changePassword": "Change Password",
+  "currentPassword": "Current Password",
+  "currentPasswordPlaceholder": "Enter your current password",
+  "newPassword": "New Password",
+  "newPasswordPlaceholder": "Enter your new password",
+  "confirmPassword": "Confirm New Password",
+  "confirmPasswordPlaceholder": "Confirm your new password",
+  "passwordChangeSuccess": "Password changed successfully",
+  "changingPassword": "Changing Password...",
+  "changePasswordButton": "Change Password",
+  "paymentMethods": "Payment Methods",
+  "paymentMethodsDescription": "Add a payment method to your account to enable premium features.",
+  "cardDetails": "Card Details",
+  "paymentMethodSuccess": "Payment method added successfully",
+  "addingCard": "Adding Card...",
+  "addCardButton": "Add Card"
+}

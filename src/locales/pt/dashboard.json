@@ -5,7 +5,8 @@
       "dashboard": "Painel",
       "generate": "Gerar",
       "history": "Histórico",
-      "support": "Suporte"
+      "support": "Suporte",
+      "settings": "Configurações"
     },
     "user": {
       "profile": "Usuário",
@@ -51,5 +52,24 @@
       "q3": "Como altero as configurações da minha conta?",
       "a3": "Vá para o seu perfil clicando no seu avatar na barra lateral e selecione 'Configurações'."
     }
+  },
+  "settings": {
+    "title": "Configurações",
+    "changePassword": "Alterar Senha",
+    "currentPassword": "Senha Atual",
+    "currentPasswordPlaceholder": "Digite sua senha atual",
+    "newPassword": "Nova Senha",
+    "newPasswordPlaceholder": "Digite sua nova senha",
+    "confirmPassword": "Confirmar Nova Senha",
+    "confirmPasswordPlaceholder": "Confirme sua nova senha",
+    "passwordChangeSuccess": "Senha alterada com sucesso",
+    "changingPassword": "Alterando Senha...",
+    "changePasswordButton": "Alterar Senha",
+    "paymentMethods": "Métodos de Pagamento",
+    "paymentMethodsDescription": "Adicione um método de pagamento à sua conta para habilitar recursos premium.",
+    "cardDetails": "Detalhes do Cartão",
+    "paymentMethodSuccess": "Método de pagamento adicionado com sucesso",
+    "addingCard": "Adicionando Cartão...",
+    "addCardButton": "Adicionar Cartão"
   }
 }

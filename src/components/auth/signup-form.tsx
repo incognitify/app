@@ -187,7 +187,7 @@ export function SignupForm() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="w-full cursor-pointer" disabled={isLoading}>
             {isLoading ? t("signup.creatingAccountButton") : t("signup.createAccountButton")}
           </Button>
         </form>

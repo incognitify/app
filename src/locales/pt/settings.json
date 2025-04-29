@@ -1,0 +1,19 @@
+{
+  "title": "Configurações",
+  "changePassword": "Alterar Senha",
+  "currentPassword": "Senha Atual",
+  "currentPasswordPlaceholder": "Digite sua senha atual",
+  "newPassword": "Nova Senha",
+  "newPasswordPlaceholder": "Digite sua nova senha",
+  "confirmPassword": "Confirmar Nova Senha",
+  "confirmPasswordPlaceholder": "Confirme sua nova senha",
+  "passwordChangeSuccess": "Senha alterada com sucesso",
+  "changingPassword": "Alterando Senha...",
+  "changePasswordButton": "Alterar Senha",
+  "paymentMethods": "Métodos de Pagamento",
+  "paymentMethodsDescription": "Adicione um método de pagamento à sua conta para habilitar recursos premium.",
+  "cardDetails": "Detalhes do Cartão",
+  "paymentMethodSuccess": "Método de pagamento adicionado com sucesso",
+  "addingCard": "Adicionando Cartão...",
+  "addCardButton": "Adicionar Cartão"
+}

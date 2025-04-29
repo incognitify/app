@@ -36,6 +36,8 @@ export default function Dashboard() {
       setActiveTab("history");
     } else if (pathname === "/generate") {
       setActiveTab("generate");
+    } else if (pathname === "/dashboard/settings") {
+      setActiveTab("settings");
     }
   }, [pathname]);
 
@@ -238,6 +240,28 @@ export default function Dashboard() {
               </svg>
               {!sidebarCollapsed && t("sidebar.nav.support", "dashboard")}
             </Link>
+
+            <Link
+              href="/dashboard/settings"
+              className={`flex items-center p-2 rounded-lg ${
+                activeTab === "settings" ? "bg-indigo-600" : "hover:bg-gray-700"
+              } ${sidebarCollapsed ? "justify-center" : ""}`}
+              onClick={() => setActiveTab("settings")}
+            >
+              <svg
+                className={`w-5 h-5 ${sidebarCollapsed ? "" : "mr-3"}`}
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              {!sidebarCollapsed && t("sidebar.nav.settings", "dashboard")}
+            </Link>
           </nav>
 
           <div
@@ -432,6 +456,75 @@ export default function Dashboard() {
                     {t("dashboard.statistics.title", "dashboard")}
                   </h3>
                   <p className="text-gray-400">{t("dashboard.statistics.noStats", "dashboard")}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "settings" && (
+            <div className="max-w-4xl mx-auto">
+              <h2 className={`text-3xl font-bold mb-8 ${isMobile ? "pt-8" : ""}`}>
+                {t("settings.title", "dashboard")}
+              </h2>
+              <div className="grid grid-cols-1 gap-8">
+                {/* Password Change Section */}
+                <div className="bg-gray-800 rounded-lg p-6">
+                  <h3 className="text-xl font-semibold mb-4">
+                    {t("settings.changePassword", "dashboard")}
+                  </h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">
+                        {t("settings.currentPassword", "dashboard")}
+                      </label>
+                      <input
+                        type="password"
+                        className="w-full bg-gray-700 text-white rounded-lg p-2"
+                        placeholder={t("settings.currentPasswordPlaceholder", "dashboard")}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">
+                        {t("settings.newPassword", "dashboard")}
+                      </label>
+                      <input
+                        type="password"
+                        className="w-full bg-gray-700 text-white rounded-lg p-2"
+                        placeholder={t("settings.newPasswordPlaceholder", "dashboard")}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">
+                        {t("settings.confirmPassword", "dashboard")}
+                      </label>
+                      <input
+                        type="password"
+                        className="w-full bg-gray-700 text-white rounded-lg p-2"
+                        placeholder={t("settings.confirmPasswordPlaceholder", "dashboard")}
+                      />
+                    </div>
+                    <Button className="bg-indigo-600 hover:bg-indigo-700">
+                      {t("settings.changePasswordButton", "dashboard")}
+                    </Button>
+                  </div>
+                </div>
+                {/* Payment Method Section */}
+                <div className="bg-gray-800 rounded-lg p-6">
+                  <h3 className="text-xl font-semibold mb-4">
+                    {t("settings.paymentMethods", "dashboard")}
+                  </h3>
+                  <p className="text-gray-300 mb-4">
+                    {t("settings.paymentMethodsDescription", "dashboard")}
+                  </p>
+                  <div className="bg-gray-700 p-4 rounded-md mb-4">
+                    <label className="block text-sm font-medium mb-2">
+                      {t("settings.cardDetails", "dashboard")}
+                    </label>
+                    <div className="h-10 flex items-center text-gray-400">•••• •••• •••• ••••</div>
+                  </div>
+                  <Button className="bg-indigo-600 hover:bg-indigo-700">
+                    {t("settings.addCardButton", "dashboard")}
+                  </Button>
                 </div>
               </div>
             </div>
