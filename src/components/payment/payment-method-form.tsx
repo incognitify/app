@@ -7,15 +7,17 @@ import { getToken } from "@/lib/auth/auth-utils";
 import { useTranslation } from "@/lib/i18n/translation-provider";
 import { Button } from "@/components/ui/button";
 
-// Initialize Stripe
-// Note: In a real application, this should be your actual publishable key from environment variables
-const stripePromise = loadStripe("pk_test_your_publishable_key");
+// Initialize Stripe with publishable key from environment variables
+// We need to ensure this is only loaded on the client side
+const getStripePromise = () => {
+  const key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+  console.log("Stripe key:", key); // For debugging
+  return loadStripe(key as string);
+};
 
-interface PaymentMethodFormProps {
-  workspaceId: string;
-}
+const stripePromise = typeof window !== "undefined" ? getStripePromise() : null;
 
-function PaymentMethodFormContent({ workspaceId }: PaymentMethodFormProps) {
+function PaymentMethodFormContent() {
   const stripe = useStripe();
   const elements = useElements();
   const { t } = useTranslation();
@@ -56,7 +58,8 @@ function PaymentMethodFormContent({ workspaceId }: PaymentMethodFormProps) {
       }
 
       // Send the payment method ID to your backend
-      const response = await fetch(`/api/workspaces/${workspaceId}/payment-methods/attach`, {
+      // The workspaceId is already in the URL path, so we don't need to include it in the body
+      const response = await fetch(`/api/workspaces/default/payment-methods/attach`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -91,31 +94,44 @@ function PaymentMethodFormContent({ workspaceId }: PaymentMethodFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="bg-gray-700 p-4 rounded-md">
-        <label className="block text-sm font-medium mb-2">
-          {t("settings.cardDetails", "settings")}
-        </label>
-        <CardElement
-          options={{
-            style: {
-              base: {
-                fontSize: "16px",
-                color: "#ffffff",
-                "::placeholder": {
-                  color: "#aab7c4",
+        <label className="block text-sm font-medium mb-2">{t("cardDetails", "settings")}</label>
+        <div id="card-element-container" className="p-3 bg-gray-800 rounded border border-gray-600">
+          <CardElement
+            id="card-element"
+            options={{
+              style: {
+                base: {
+                  fontSize: "16px",
+                  color: "#ffffff",
+                  "::placeholder": {
+                    color: "#aab7c4",
+                  },
+                  iconColor: "#ffffff",
+                  fontFamily: "Arial, sans-serif",
+                  fontSmoothing: "antialiased",
+                },
+                invalid: {
+                  color: "#fa755a",
+                  iconColor: "#fa755a",
                 },
               },
-              invalid: {
-                color: "#fa755a",
-                iconColor: "#fa755a",
-              },
-            },
-          }}
-        />
+              hidePostalCode: true,
+            }}
+            onChange={(event) => {
+              // Log any change events to help debug
+              console.log("CardElement change", event);
+              // Clear any previous error messages when the user makes changes
+              if (paymentError) {
+                setPaymentError("");
+              }
+            }}
+          />
+        </div>
       </div>
 
       {paymentSuccess && (
         <div className="bg-green-800 text-white p-3 rounded-md">
-          {t("settings.paymentMethodSuccess", "settings")}
+          {t("paymentMethodSuccess", "settings")}
         </div>
       )}
 
@@ -123,21 +139,27 @@ function PaymentMethodFormContent({ workspaceId }: PaymentMethodFormProps) {
 
       <Button
         type="submit"
-        className="bg-indigo-600 hover:bg-indigo-700"
+        className="bg-indigo-600 hover:bg-indigo-700 cursor-pointer"
         disabled={!stripe || isProcessing}
       >
-        {isProcessing
-          ? t("settings.addingCard", "settings")
-          : t("settings.addCardButton", "settings")}
+        {isProcessing ? t("addingCard", "settings") : t("addCardButton", "settings")}
       </Button>
     </form>
   );
 }
 
-export function PaymentMethodForm({ workspaceId }: PaymentMethodFormProps) {
+export function PaymentMethodForm() {
+  // Only render the Elements provider if we have a Stripe promise
+  if (!stripePromise) {
+    return (
+      <div className="p-4 bg-red-800 text-white rounded-md">
+        Stripe could not be initialized. Please check your environment variables.
+      </div>
+    );
+  }
   return (
     <Elements stripe={stripePromise}>
-      <PaymentMethodFormContent workspaceId={workspaceId} />
+      <PaymentMethodFormContent />
     </Elements>
   );
 }
