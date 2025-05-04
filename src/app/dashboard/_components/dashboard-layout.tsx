@@ -9,7 +9,11 @@ import { Button } from "@/components/ui/button";
 import { LanguageSelector } from "@/components/language-selector";
 import { AuthGuard } from "@/components/auth/auth-guard";
 
-export default function Dashboard() {
+interface DashboardLayoutProps {
+  children: React.ReactNode;
+}
+
+export function DashboardLayout({ children }: DashboardLayoutProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { t } = useTranslation();
@@ -36,7 +40,7 @@ export default function Dashboard() {
       setActiveTab("history");
     } else if (pathname === "/generate") {
       setActiveTab("generate");
-    } else if (pathname === "/dashboard/settings") {
+    } else if (pathname.includes("/dashboard/settings")) {
       setActiveTab("settings");
     }
   }, [pathname]);
@@ -51,46 +55,38 @@ export default function Dashboard() {
     // Initial check
     checkIfMobile();
 
-    // Add event listener for window resize
+    // Add event listener
     window.addEventListener("resize", checkIfMobile);
 
     // Cleanup
     return () => window.removeEventListener("resize", checkIfMobile);
   }, []);
 
+  const toggleSidebar = () => {
+    setSidebarCollapsed(!sidebarCollapsed);
+  };
+
   const handleLogout = () => {
     logout();
     router.push("/login");
   };
 
-  const toggleSidebar = () => {
-    setSidebarCollapsed(!sidebarCollapsed);
-  };
-
   return (
     <AuthGuard>
-      <div className="flex h-screen bg-gray-900 text-white relative">
-        {/* Mobile sidebar backdrop */}
-        {isMobile && !sidebarCollapsed && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-10 md:hidden"
-            onClick={toggleSidebar}
-          />
-        )}
-
+      <div className="flex h-screen bg-gray-900 text-white">
         {/* Sidebar */}
         <div
-          className={`${
+          className={`bg-gray-800 ${
             sidebarCollapsed ? "w-16" : "w-64"
-          } bg-gray-800 p-4 flex flex-col transition-all duration-300 ease-in-out ${
-            isMobile ? "fixed z-20 h-full" : "relative"
-          } ${isMobile && sidebarCollapsed ? "-translate-x-full" : "translate-x-0"}`}
+          } flex flex-col fixed h-full z-20 transition-all duration-300 ease-in-out ${
+            isMobile && !sidebarCollapsed ? "translate-x-0" : ""
+          } ${isMobile && sidebarCollapsed ? "-translate-x-full" : ""}`}
         >
-          <div className="flex items-center mb-8 justify-between">
+          <div className="p-4 flex items-center">
             {!sidebarCollapsed && (
               <>
                 <svg
-                  className="w-8 h-8 text-indigo-500 flex-shrink-0"
+                  className="w-8 h-8 text-indigo-500"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   xmlns="http://www.w3.org/2000/svg"
@@ -373,266 +369,13 @@ export default function Dashboard() {
 
         {/* Main Content */}
         <div
-          className={`flex-1 p-8 overflow-y-auto ${isMobile ? "w-full" : ""} ${
+          className={`flex-1 ${!isMobile ? "ml-64" : ""} ${
+            sidebarCollapsed && !isMobile ? "ml-16" : ""
+          } transition-all duration-300 ease-in-out overflow-y-auto ${
             isMobile && !sidebarCollapsed ? "opacity-50" : "opacity-100"
           }`}
         >
-          {activeTab === "generate" && (
-            <div className="max-w-4xl mx-auto">
-              <h2 className={`text-3xl font-bold mb-8 ${isMobile ? "pt-8" : ""}`}>
-                {t("generate.title", "dashboard")}
-              </h2>
-
-              <div className="bg-gray-800 rounded-lg p-4 mb-6">
-                <textarea
-                  className="w-full bg-gray-700 text-white rounded-lg p-4 min-h-[200px]"
-                  placeholder={t("generate.placeholder", "dashboard")}
-                />
-              </div>
-
-              <div className="flex space-x-4">
-                <Button className="bg-indigo-600 hover:bg-indigo-700">
-                  <svg
-                    className="w-5 h-5 mr-2"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  {t("generate.buttons.fromUrl", "dashboard")}
-                </Button>
-
-                <Button className="bg-indigo-600 hover:bg-indigo-700">
-                  <svg
-                    className="w-5 h-5 mr-2"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  {t("generate.buttons.fromTopic", "dashboard")}
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {activeTab === "history" && (
-            <div className="max-w-4xl mx-auto">
-              <h2 className={`text-3xl font-bold mb-8 ${isMobile ? "pt-8" : ""}`}>
-                {t("history.title", "dashboard")}
-              </h2>
-              <div className="bg-gray-800 rounded-lg p-6">
-                <p className="text-gray-400 text-center">{t("history.noHistory", "dashboard")}</p>
-              </div>
-            </div>
-          )}
-
-          {activeTab === "dashboard" && (
-            <div className="max-w-4xl mx-auto">
-              <h2 className={`text-3xl font-bold mb-8 ${isMobile ? "pt-8" : ""}`}>
-                {t("dashboard.title", "dashboard")}
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <h3 className="text-xl font-semibold mb-4">
-                    {t("dashboard.recentActivity.title", "dashboard")}
-                  </h3>
-                  <p className="text-gray-400">
-                    {t("dashboard.recentActivity.noActivity", "dashboard")}
-                  </p>
-                </div>
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <h3 className="text-xl font-semibold mb-4">
-                    {t("dashboard.statistics.title", "dashboard")}
-                  </h3>
-                  <p className="text-gray-400">{t("dashboard.statistics.noStats", "dashboard")}</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === "settings" && (
-            <div className="max-w-4xl mx-auto">
-              <h2 className={`text-3xl font-bold mb-8 ${isMobile ? "pt-8" : ""}`}>
-                {t("settings.title", "dashboard")}
-              </h2>
-              <div className="grid grid-cols-1 gap-8">
-                {/* Password Change Section */}
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <h3 className="text-xl font-semibold mb-4">
-                    {t("settings:changePassword", "dashboard")}
-                  </h3>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-1">
-                        {t("settings:currentPassword", "dashboard")}
-                      </label>
-                      <input
-                        type="password"
-                        className="w-full bg-gray-700 text-white rounded-lg p-2"
-                        placeholder={t("settings:currentPasswordPlaceholder", "dashboard")}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">
-                        {t("settings:newPassword", "dashboard")}
-                      </label>
-                      <input
-                        type="password"
-                        className="w-full bg-gray-700 text-white rounded-lg p-2"
-                        placeholder={t("settings:newPasswordPlaceholder", "dashboard")}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">
-                        {t("settings:confirmPassword", "dashboard")}
-                      </label>
-                      <input
-                        type="password"
-                        className="w-full bg-gray-700 text-white rounded-lg p-2"
-                        placeholder={t("settings:confirmPasswordPlaceholder", "dashboard")}
-                      />
-                    </div>
-                    <Button className="bg-indigo-600 hover:bg-indigo-700">
-                      {t("settings:changePasswordButton", "dashboard")}
-                    </Button>
-                  </div>
-                </div>
-                {/* Payment Method Section */}
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <h3 className="text-xl font-semibold mb-4">
-                    {t("settings:paymentMethods", "dashboard")}
-                  </h3>
-                  <p className="text-gray-300 mb-4">
-                    {t("settings:paymentMethodsDescription", "dashboard")}
-                  </p>
-                  <div className="bg-gray-700 p-4 rounded-md mb-4">
-                    <label className="block text-sm font-medium mb-2">
-                      {t("settings:cardDetails", "dashboard")}
-                    </label>
-                    <div className="h-10 flex items-center text-gray-400">•••• •••• •••• ••••</div>
-                  </div>
-                  <Link href="/dashboard/payment/add-card">
-                    <Button className="bg-indigo-600 hover:bg-indigo-700">
-                      {t("settings:addCardButton", "dashboard")}
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === "support" && (
-            <div className="max-w-4xl mx-auto">
-              <h2 className={`text-3xl font-bold mb-8 ${isMobile ? "pt-8" : ""}`}>
-                {t("support.title", "dashboard")}
-              </h2>
-              <p className="text-gray-300 mb-8">{t("support.description", "dashboard")}</p>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <h3 className="text-xl font-semibold mb-4">
-                    {t("support.contactInfo", "dashboard")}
-                  </h3>
-                  <div className="space-y-3">
-                    <p className="flex items-center">
-                      <svg
-                        className="w-5 h-5 mr-2 text-indigo-400"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                      </svg>
-                      <span>{t("support.email", "dashboard")}</span>
-                    </p>
-                    <p className="flex items-center">
-                      <svg
-                        className="w-5 h-5 mr-2 text-indigo-400"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                      </svg>
-                      <span>{t("support.phone", "dashboard")}</span>
-                    </p>
-                    <p className="flex items-center">
-                      <svg
-                        className="w-5 h-5 mr-2 text-indigo-400"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span>{t("support.hours", "dashboard")}</span>
-                    </p>
-                  </div>
-                </div>
-
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <h3 className="text-xl font-semibold mb-4">
-                    {t("support.faq.title", "dashboard")}
-                  </h3>
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="font-medium text-indigo-400">
-                        {t("support.faq.q1", "dashboard")}
-                      </h4>
-                      <p className="text-gray-300 mt-1">{t("support.faq.a1", "dashboard")}</p>
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-indigo-400">
-                        {t("support.faq.q2", "dashboard")}
-                      </h4>
-                      <p className="text-gray-300 mt-1">{t("support.faq.a2", "dashboard")}</p>
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-indigo-400">
-                        {t("support.faq.q3", "dashboard")}
-                      </h4>
-                      <p className="text-gray-300 mt-1">{t("support.faq.a3", "dashboard")}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-gray-800 rounded-lg p-6">
-                <h3 className="text-xl font-semibold mb-4">Contact Form</h3>
-                <form className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Name</label>
-                    <input type="text" className="w-full bg-gray-700 text-white rounded-lg p-2" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Email</label>
-                    <input type="email" className="w-full bg-gray-700 text-white rounded-lg p-2" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Message</label>
-                    <textarea className="w-full bg-gray-700 text-white rounded-lg p-2 min-h-[100px]"></textarea>
-                  </div>
-                  <Button className="bg-indigo-600 hover:bg-indigo-700">Send Message</Button>
-                </form>
-              </div>
-            </div>
-          )}
+          {children}
         </div>
       </div>
     </AuthGuard>

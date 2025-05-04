@@ -81,6 +81,9 @@ export function TranslationProvider({ children }: TranslationProviderProps) {
         // Load dashboard translations
         const dashboardTranslations = await loadTranslations(language, "dashboard");
 
+        // Load settings translations
+        const settingsTranslations = await loadTranslations(language, "settings");
+
         // Set all translations
         setTranslations({
           auth: authTranslations,
@@ -89,6 +92,7 @@ export function TranslationProvider({ children }: TranslationProviderProps) {
           "request-password-reset": requestPasswordResetTranslations,
           register: registerTranslations,
           dashboard: dashboardTranslations,
+          settings: settingsTranslations,
         });
       } catch (error) {
         console.error("Failed to load translations:", error);
